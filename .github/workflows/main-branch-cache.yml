@@ -1,0 +1,67 @@
+name: Main Branch Cache Test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  create-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Run script to generate cache
+        run: python src/main.py
+        
+      - name: Cache timestamp
+        uses: actions/cache@v3
+        with:
+          path: cache
+          key: timestamp-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+  restore-cache:
+    needs: create-cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Restore cache
+        uses: actions/cache@v3
+        with:
+          path: cache
+          key: timestamp-${{ runner.os }}-${{ github.ref }}
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display cached timestamp
+        run: |
+          if [ -f cache/timestamp.txt ]; then
+            echo "Cached timestamp:"
+            cat cache/timestamp.txt
+          else
+            echo "No cache found"
+          fi 
