@@ -1,0 +1,77 @@
+name: Pull Request Cache Test
+
+on:
+  pull_request:
+    branches:
+      - 'feature-*'
+  workflow_dispatch:
+
+jobs:
+  test-pr-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Try to restore cache from main branch
+        uses: actions/cache@v3
+        with:
+          path: cache-main
+          key: timestamp-${{ runner.os }}-refs/heads/main
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display main branch cache status
+        run: |
+          if [ -f cache-main/timestamp.txt ]; then
+            echo "Main branch cache found:"
+            cat cache-main/timestamp.txt
+          else
+            echo "No main branch cache found"
+          fi
+          
+      - name: Try to restore cache from base branch
+        uses: actions/cache@v3
+        with:
+          path: cache-base
+          key: timestamp-${{ runner.os }}-${{ github.base_ref }}
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display base branch cache status
+        run: |
+          if [ -f cache-base/timestamp.txt ]; then
+            echo "Base branch cache found:"
+            cat cache-base/timestamp.txt
+          else
+            echo "No base branch cache found"
+          fi
+          
+      - name: Create new cache for PR
+        run: python src/main.py
+        
+      - name: Cache PR timestamp
+        uses: actions/cache@v3
+        with:
+          path: cache-pr
+          key: timestamp-${{ runner.os }}-${{ github.head_ref }}
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display PR cache status
+        run: |
+          if [ -f cache-pr/timestamp.txt ]; then
+            echo "PR cache created:"
+            cat cache-pr/timestamp.txt
+          else
+            echo "Failed to create PR cache"
+          fi 
