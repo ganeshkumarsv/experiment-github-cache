@@ -1,4 +1,4 @@
-name: Sibling Branch Cache Test
+name: Create Verify Branch Cache Test
 
 on:
   push:
