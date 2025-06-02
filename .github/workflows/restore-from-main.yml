@@ -1,0 +1,40 @@
+name: Feature Branch Cache Test
+
+on:
+  push:
+    branches:
+      - 'main-to-featureA'
+  workflow_dispatch:
+
+jobs:
+  test-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Restore cache from main branch
+        uses: actions/cache@v3
+        with:
+          path: cache
+          key: timestamp-${{ runner.os }}-refs/heads/main
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display cached timestamp
+        run: |
+          if [ -f cache/timestamp.txt ]; then
+            echo "Cached timestamp from main branch:"
+            cat cache/timestamp.txt
+          else
+            echo "No cache found from main branch"
+          fi 
