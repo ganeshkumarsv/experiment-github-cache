@@ -53,7 +53,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache
-          key: timestamp-${{ runner.os }}-${{ github.ref }}
+          key: timestamp-${{ runner.os }}-feature-a
           restore-keys: |
             timestamp-${{ runner.os }}-
             
