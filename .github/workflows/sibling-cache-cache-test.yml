@@ -1,0 +1,40 @@
+name: Sibling Branch Cache Test
+
+on:
+  push:
+    branches:
+      - 'main-to-featureB'
+  workflow_dispatch:
+
+jobs:
+  verify-isolation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Try to restore cache from sibling branch
+        uses: actions/cache@v3
+        with:
+          path: cache
+          key: timestamp-Linux-refs/heads/main-to-featureA
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display cache status
+        run: |
+          if [ -f cache/timestamp.txt ]; then
+            echo "Cache found:"
+            cat cache/timestamp.txt
+          else
+            echo "No cache found (Expected for Sibling cache isolation)"
+          fi 
