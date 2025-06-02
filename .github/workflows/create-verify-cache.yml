@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             timestamp-${{ runner.os }}-
             
-  verify-isolation:
+  verify-cache:
     needs: create-cache
     runs-on: ubuntu-latest
     steps:
