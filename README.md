@@ -1,6 +1,6 @@
 # GitHub Cache Sharing Experiment
 
-This repository demonstrates how GitHub caches are shared and isolated across branches in various scenarios.
+This repository demonstrates how GitHub caches are shared and isolated across branches in various scenarios..
 
 ## Scenarios
 
