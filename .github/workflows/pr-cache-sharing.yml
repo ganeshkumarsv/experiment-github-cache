@@ -35,6 +35,8 @@ jobs:
           if [ -f cache-main/timestamp.txt ]; then
             echo "Main branch cache found:"
             cat cache-main/timestamp.txt
+            echo "Current PR ref: ${{ github.ref }}"
+            echo "Base ref: ${{ github.base_ref }}"
           else
             echo "No main branch cache found"
           fi
@@ -43,7 +45,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache-base
-          key: timestamp-${{ runner.os }}-${{ github.base_ref }}
+          key: timestamp-${{ runner.os }}-refs/heads/${{ github.base_ref }}
           restore-keys: |
             timestamp-${{ runner.os }}-
             
