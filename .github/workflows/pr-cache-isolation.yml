@@ -3,7 +3,7 @@ name: Pull Request Cache Isolation Test
 on:
   pull_request:
     branches:
-      - 'feature-*'
+      - 'main-to-featureA'
   workflow_dispatch:
 
 jobs:
