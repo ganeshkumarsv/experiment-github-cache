@@ -3,7 +3,7 @@ name: Pull Request Cache Isolation Test
 on:
   pull_request:
     branches:
-      - 'main-to-featureA'
+      - 'feature-*'
   workflow_dispatch:
 
 jobs:
@@ -29,9 +29,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache-pr
-          key: pr-timestamp-${{ runner.os }}-${{ github.event.pull_request.number }}
+          key: timestamp-${{ runner.os }}-${{ github.ref }}
           restore-keys: |
-            pr-timestamp-${{ runner.os }}-
+            timestamp-${{ runner.os }}-
             
   verify-pr-cache-isolation:
     needs: create-pr-cache
@@ -53,15 +53,16 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache-pr
-          key: pr-timestamp-${{ runner.os }}-${{ github.event.pull_request.number }}
+          key: timestamp-${{ runner.os }}-${{ github.ref }}
           restore-keys: |
-            pr-timestamp-${{ runner.os }}-
+            timestamp-${{ runner.os }}-
             
       - name: Display PR cache status
         run: |
           if [ -f cache-pr/timestamp.txt ]; then
             echo "PR-specific cache found:"
             cat cache-pr/timestamp.txt
+            echo "PR reference: ${{ github.ref }}"
           else
             echo "No PR-specific cache found"
           fi
@@ -70,9 +71,9 @@ jobs:
         uses: actions/cache@v3
         with:
           path: cache-base
-          key: pr-timestamp-${{ runner.os }}-${{ github.base_ref }}
+          key: timestamp-${{ runner.os }}-${{ github.base_ref }}
           restore-keys: |
-            pr-timestamp-${{ runner.os }}-
+            timestamp-${{ runner.os }}-
             
       - name: Display base branch cache status
         run: |
