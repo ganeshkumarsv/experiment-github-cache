@@ -25,7 +25,7 @@ jobs:
       - name: Try to restore cache from main branch
         uses: actions/cache@v3
         with:
-          path: cache-main
+          path: cache
           key: timestamp-${{ runner.os }}-refs/heads/main
           restore-keys: |
             timestamp-${{ runner.os }}-
@@ -44,7 +44,7 @@ jobs:
       - name: Try to restore cache from base branch
         uses: actions/cache@v3
         with:
-          path: cache-base
+          path: cache
           key: timestamp-${{ runner.os }}-refs/heads/${{ github.base_ref }}
           restore-keys: |
             timestamp-${{ runner.os }}-
