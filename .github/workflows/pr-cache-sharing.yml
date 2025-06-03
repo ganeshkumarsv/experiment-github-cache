@@ -34,7 +34,7 @@ jobs:
         run: |
           if [ -f cache/timestamp.txt ]; then
             echo "Main branch cache found:"
-            cat cache-main/timestamp.txt
+            cat cache/timestamp.txt
             echo "Current PR ref: ${{ github.ref }}"
             echo "Base ref: ${{ github.base_ref }}"
           else
@@ -53,7 +53,7 @@ jobs:
         run: |
           if [ -f cache/timestamp.txt ]; then
             echo "Base branch cache found:"
-            cat cache-base/timestamp.txt
+            cat cache/timestamp.txt
           else
             echo "No base branch cache found"
           fi 
