@@ -32,7 +32,7 @@ jobs:
             
       - name: Display main branch cache status
         run: |
-          if [ -f cache-main/timestamp.txt ]; then
+          if [ -f cache/timestamp.txt ]; then
             echo "Main branch cache found:"
             cat cache-main/timestamp.txt
             echo "Current PR ref: ${{ github.ref }}"
@@ -51,9 +51,26 @@ jobs:
             
       - name: Display base branch cache status
         run: |
-          if [ -f cache-base/timestamp.txt ]; then
+          if [ -f cache/timestamp.txt ]; then
             echo "Base branch cache found:"
             cat cache-base/timestamp.txt
           else
             echo "No base branch cache found"
+          fi 
+
+      - name: Try to restore cache from a different (not base) branch
+        uses: actions/cache@v3
+        with:
+          path: cache
+          key: timestamp-Linux-refs/heads/feature-b
+          restore-keys: |
+            timestamp-${{ runner.os }}-
+            
+      - name: Display branch (not base) cache status
+        run: |
+          if [ -f cache/timestamp.txt ]; then
+            echo "Branch (not base) cache found:"
+            cat cache-base/timestamp.txt
+          else
+            echo "No branch cache found"
           fi 
