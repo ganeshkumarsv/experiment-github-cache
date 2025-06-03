@@ -70,7 +70,7 @@ jobs:
         run: |
           if [ -f cache/timestamp.txt ]; then
             echo "Branch (not base) cache found:"
-            cat cache-base/timestamp.txt
+            cat cache/timestamp.txt
           else
             echo "No branch cache found"
           fi 
