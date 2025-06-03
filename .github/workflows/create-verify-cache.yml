@@ -55,7 +55,7 @@ jobs:
           path: cache
           key: timestamp-${{ runner.os }}-${{ github.ref }}
           restore-keys: |
-            timestamp-${{ runner.os }}-
+            timestamp-${{ runner.os }}-${{ github.ref }}
             
       - name: Display cache status
         run: |
