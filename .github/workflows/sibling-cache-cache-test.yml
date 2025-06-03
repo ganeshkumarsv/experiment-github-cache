@@ -28,7 +28,7 @@ jobs:
           path: cache
           key: timestamp-Linux-refs/heads/main-to-featureA
           restore-keys: |
-            timestamp-${{ runner.os }}-
+            timestamp-Linux-refs/heads/main-to-featureA
             
       - name: Display cache status
         run: |
